@@ -2,6 +2,8 @@ use node_template_runtime::{
 	AccountId, AuraConfig, BalancesConfig, GrandpaConfig, RuntimeGenesisConfig, Signature,
 	SudoConfig, SystemConfig, WASM_BINARY,
 };
+use sp_core::OpaquePeerId;
+use node_template_runtime::NodeAuthorizationConfig;
 use sc_service::ChainType;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_consensus_grandpa::AuthorityId as GrandpaId;
@@ -133,6 +135,20 @@ fn testnet_genesis(
 	_enable_println: bool,
 ) -> RuntimeGenesisConfig {
 	RuntimeGenesisConfig {
+		node_authorization: NodeAuthorizationConfig {
+			nodes: vec![
+				(
+					// Alice Node - Peer Identifier
+					OpaquePeerId(bs58::decode("12D3KooWBmAwcd4PJNJvfV89HwE48nwkRmAgo8Vy3uQEyNNHBox2").into_vec().unwrap()),
+					endowed_accounts[0].clone(),
+				),
+				(
+					// Bob Node - Peer Identifier
+					OpaquePeerId(bs58::decode("12D3KooWQYV9dGMFoRzNStwpXztXaBUjtPqi6aU76ZgUriHhKust").into_vec().unwrap()),
+					endowed_accounts[1].clone(),
+				),
+			],
+		},
 		system: SystemConfig {
 			// Add Wasm runtime to storage.
 			code: wasm_binary.to_vec(),
